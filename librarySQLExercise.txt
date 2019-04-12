@@ -1,0 +1,71 @@
+1.Who checked out the book 'The Hobbit’?
+
+SELECT m.name FROM MEMBER m  
+WHERE m.id IN (
+	SELECT c.member_id FROM checkout_item c, book b 
+	WHERE c.book_id = b.id
+	AND b.title = 'The Hobbit'
+);
+
+// answer: Anand Beck
+
+2.How many people have not checked out anything?
+
+SELECT COUNT(*) FROM member m
+WHERE m.id NOT IN(
+	SELECT c.member_id FROM checkout_item c
+		WHERE c.member_id = m.id
+);
+
+// answer: 37
+
+
+3.What books and movies aren't checked out?
+SELECT SUM(items_count) FROM(
+	SELECT COUNT(*) AS items_count FROM book b
+	WHERE b.id NOT IN(
+		SELECT c.book_id FROM checkout_item c
+		WHERE c.book_id = b.id
+	) 
+	UNION 
+	SELECT COUNT(*) AS items_count FROM movie m
+	WHERE m.id NOT IN(
+		SELECT c.movie_id FROM checkout_item c
+		WHERE c.movie_id = m.id
+	)
+);
+
+// answer: 10
+
+
+4.Add the book 'The Pragmatic Programmer', and add yourself as a member. Check out 'The Pragmatic Programmer'. Use your query from question 1 to verify that you have checked it out. Also, provide the SQL used to update the database.
+INSERT INTO book (id, title) VALUES (11, "The Pragmatic Programmer");
+INSERT INTO member (id, name) VALUES(43,"Manuela");
+INSERT INTO checkout_item (member_id, book_id, movie_id) VALUES(43,11,null); 
+
+SELECT m.name FROM MEMBER m  
+WHERE m.id IN (
+	SELECT c.member_id FROM checkout_item c, book b 
+	WHERE c.book_id = b.id
+	AND b.title = 'The Pragmatic Programmer'
+);
+
+I didn't understand the part which says "Also, provide the SQL used to update the database." Is it the following? 
+UPDATE checkout_item SET book_id=1 WHERE book_id=11 
+
+
+5.Who has checked out more that 1 item? 
+Tip: Research the GROUP BY syntax.
+
+SELECT name FROM(
+	SELECT m.name AS name, COUNT(m.id) FROM member m, checkout_item c
+	WHERE m.id = c.member_id 
+	GROUP BY m.id
+	HAVING COUNT(m.id) > 1
+);
+
+// answer: Frank Smith, Anand Beck
+
+
+
+
