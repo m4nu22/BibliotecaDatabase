@@ -50,9 +50,6 @@ WHERE m.id IN (
 	AND b.title = 'The Pragmatic Programmer'
 );
 
-I didn't understand the part which says "Also, provide the SQL used to update the database." Is it the following? 
-UPDATE checkout_item SET book_id=1 WHERE book_id=11 
-
 
 5.Who has checked out more that 1 item? 
 Tip: Research the GROUP BY syntax.
